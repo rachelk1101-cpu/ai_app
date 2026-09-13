@@ -21,9 +21,10 @@ type Overrides = Partial<Record<RealLandmark, Partial<Point>>>
  */
 function standing(overrides: Overrides = {}, flipYAxis = false): Point[] {
   const base: Partial<Record<RealLandmark, [number, number, number]>> = {
-    nose: [0, -0.62, 0.06],
-    leftEar: [0.08, -0.6, 0],
-    rightEar: [-0.08, -0.6, 0],
+    // 어깨(-0.50)보다 20cm 남짓 위에 머리가 있는, 서 있는 성인의 대략적인 비율.
+    nose: [0, -0.7, 0.06],
+    leftEar: [0.08, -0.72, 0],
+    rightEar: [-0.08, -0.72, 0],
     leftShoulder: [0.18, -0.5, 0],
     rightShoulder: [-0.18, -0.5, 0],
     leftElbow: [0.2, -0.24, 0],
@@ -156,6 +157,72 @@ describe('옆구리 늘리기', () => {
   it('한 팔만 올려도 통과한다', () => {
     const oneArm = standing({ rightWrist: { x: -0.5, y: -0.95 } })
     expect(evaluateChecks(exercise.checks, oneArm)).toBe(true)
+  })
+})
+
+describe('팔 옆으로 쫙', () => {
+  const exercise = findExercise('arms-out')!
+
+  it('팔을 내리고 있으면 통과하지 않는다', () => {
+    expect(evaluateChecks(exercise.checks, standing())).toBe(false)
+  })
+
+  it('두 팔을 옆으로 벌리면 통과한다', () => {
+    const wide = standing({
+      leftWrist: { x: 0.75, y: -0.5 },
+      rightWrist: { x: -0.75, y: -0.5 },
+    })
+    expect(evaluateChecks(exercise.checks, wide)).toBe(true)
+  })
+
+  it('V자 만세처럼 올려도 팔이 충분히 벌어져 있으면 통과한다', () => {
+    // 옆으로 벌리라고 했는데 위로 올린 사용자도 분명히 하고 있는 것이다.
+    // 손목 높이까지 따져서 "그건 다른 동작"이라고 떨어뜨리면, 열심히 한
+    // 사람에게 아무 반응도 돌려주지 않게 된다. 애매하면 통과시킨다.
+    expect(evaluateChecks(exercise.checks, standing(ARMS_UP))).toBe(true)
+  })
+
+  it('팔을 앞으로만 모으면 통과하지 않는다', () => {
+    const together = standing({
+      leftWrist: { x: 0.05, y: -0.3, z: 0.4 },
+      rightWrist: { x: -0.05, y: -0.3, z: 0.4 },
+    })
+    expect(evaluateChecks(exercise.checks, together)).toBe(false)
+  })
+})
+
+describe('알통 만들기', () => {
+  const exercise = findExercise('elbow-bend')!
+
+  it('팔을 펴고 있으면 통과하지 않는다', () => {
+    expect(evaluateChecks(exercise.checks, standing())).toBe(false)
+  })
+
+  it('한쪽 팔꿈치만 굽혀도 통과한다', () => {
+    const bent = standing({ leftWrist: { x: 0.22, y: -0.46, z: 0.1 } })
+    expect(evaluateChecks(exercise.checks, bent)).toBe(true)
+  })
+})
+
+describe('목 옆으로', () => {
+  const exercise = findExercise('neck-tilt')!
+
+  it('고개를 바로 들고 있으면 통과하지 않는다', () => {
+    expect(evaluateChecks(exercise.checks, standing())).toBe(false)
+  })
+
+  it('어느 쪽으로 기울여도 통과한다', () => {
+    // 기울이면 기운 쪽 귀가 내려가고 반대쪽 귀가 올라간다.
+    const tiltLeft = standing({ leftEar: { y: -0.65 }, rightEar: { y: -0.78 } })
+    const tiltRight = standing({ leftEar: { y: -0.78 }, rightEar: { y: -0.65 } })
+    expect(evaluateChecks(exercise.checks, tiltLeft)).toBe(true)
+    expect(evaluateChecks(exercise.checks, tiltRight)).toBe(true)
+  })
+
+  it('고개를 좌우로 돌리기만 한 것과 구분된다', () => {
+    // 목 좌우로(neck-turn)는 코가 옆으로 움직일 뿐 귀 높이는 그대로다.
+    const turned = standing({ nose: { x: 0.12 } })
+    expect(evaluateChecks(exercise.checks, turned)).toBe(false)
   })
 })
 

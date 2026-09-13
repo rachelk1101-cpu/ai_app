@@ -1,4 +1,5 @@
-import { EXERCISES, estimateMinutes } from '../data/exercises'
+import { estimateMinutes } from '../data/exercises'
+import { weekNote, weekOf } from '../data/program'
 import { speak } from '../session/speak'
 import { useSession } from '../session/useSession'
 import { BigButton } from '../ui/BigButton'
@@ -14,21 +15,26 @@ import { BigButton } from '../ui/BigButton'
  * 운동 구성을 바꾸는 일은 보호자·교사용 화면이 할 몫으로 남겨 둔다.
  */
 export function PickScreen() {
-  const start = useSession((s) => s.start)
+  const beginSession = useSession((s) => s.beginSession)
   const goHome = useSession((s) => s.goHome)
+  const routine = useSession((s) => s.routine)
+  const sessionIndex = useSession((s) => s.sessionIndex)
 
-  const routine = EXERCISES
   const minutes = estimateMinutes(routine)
+  const week = weekOf(sessionIndex)
 
   const handleStart = () => {
     speak('시작할게요. 튼튼이를 따라 해 보세요.', { force: true })
-    start(routine)
+    beginSession()
   }
 
   return (
     <main className="mx-auto flex h-full w-full max-w-[900px] flex-col px-6 py-7">
       <header className="text-center">
-        <h1 className="text-[38px] leading-tight font-black text-ink">오늘은 이걸 해요</h1>
+        <p className="text-[22px] font-bold text-brand">
+          {week}주차 · {weekNote(sessionIndex)}
+        </p>
+        <h1 className="mt-1 text-[38px] leading-tight font-black text-ink">오늘은 이걸 해요</h1>
         <p className="mt-1 text-[24px] font-bold text-ink-soft">
           {routine.length}가지 · 약 {minutes}분
         </p>

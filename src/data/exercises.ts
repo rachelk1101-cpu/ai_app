@@ -122,6 +122,62 @@ export const EXERCISES: Exercise[] = [
     checks: [{ type: 'near', a: 'leftWrist', b: 'rightWrist', maxDist: 0.5 }],
   },
   {
+    id: 'arms-out',
+    name: '팔 옆으로 쫙',
+    emoji: '🤗',
+    clip: 'armsOut',
+    reps: 6,
+    tempoSec: 4,
+    cue: '두 팔을 옆으로 쫙 벌려요.',
+    hint: '옆으로 쫙!',
+    holdMs: 300,
+    // 두 손목이 얼마나 멀어졌는지 하나만 본다. 차렷일 때는 어깨 너비 남짓,
+    // 벌리면 네 배쯤 되므로 구분이 아주 뚜렷하다.
+    checks: [{ type: 'apart', a: 'leftWrist', b: 'rightWrist', minDist: 2.4 }],
+  },
+  {
+    id: 'elbow-bend',
+    name: '알통 만들기',
+    emoji: '💪',
+    clip: 'elbowBend',
+    reps: 6,
+    tempoSec: 4,
+    cue: '팔을 옆으로 벌리고 팔꿈치를 위로 접어요.',
+    hint: '팔꿈치 접어요',
+    holdMs: 300,
+    checks: [
+      {
+        type: 'anyOf',
+        checks: [
+          { type: 'angle', joints: ['leftShoulder', 'leftElbow', 'leftWrist'], max: 100 },
+          { type: 'angle', joints: ['rightShoulder', 'rightElbow', 'rightWrist'], max: 100 },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'neck-tilt',
+    name: '목 옆으로',
+    emoji: '🙆',
+    clip: 'neckTilt',
+    reps: 4,
+    tempoSec: 8,
+    cue: '귀를 어깨 쪽으로 천천히 기울여요.',
+    hint: '귀를 어깨에',
+    holdMs: 350,
+    // 두 귀의 높이를 견줘 본다. 절대 위치가 아니라 상대 비교라서
+    // 사용자의 체격이나 카메라 각도가 달라져도 흔들리지 않는다.
+    checks: [
+      {
+        type: 'anyOf',
+        checks: [
+          { type: 'above', a: 'leftEar', b: 'rightEar', margin: 0.15 },
+          { type: 'above', a: 'rightEar', b: 'leftEar', margin: 0.15 },
+        ],
+      },
+    ],
+  },
+  {
     id: 'neck-turn',
     name: '목 좌우로',
     emoji: '🙂',

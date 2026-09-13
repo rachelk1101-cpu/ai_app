@@ -222,6 +222,84 @@ export const POSE_CLIPS: Record<string, PoseClip> = {
     ],
   },
 
+  /**
+   * 팔 옆으로 벌리기 — T자.
+   *
+   * 정면 카메라에서 가장 잘 읽히는 동작이다. 팔이 화면 좌우로 길게 뻗으므로
+   * 실루엣 변화가 가장 크고, 멀리서도 따라 할 수 있다.
+   */
+  armsOut: {
+    id: 'armsOut',
+    keys: [
+      REST,
+      { t: 0.3, bones: { leftShoulder: [0, 0, 80], rightShoulder: [0, 0, -80] } },
+      { t: 0.6, bones: { leftShoulder: [0, 0, 84], rightShoulder: [0, 0, -84] } },
+      { t: 0.9, bones: {} },
+      { t: 1, bones: {} },
+    ],
+  },
+
+  /**
+   * 알통 만들기 — 팔을 옆으로 벌린 채 팔꿈치를 위로 접는다.
+   *
+   * 팔을 몸에 붙이고 앞으로 접으면 정면 카메라에서 전완이 단축되어 거의
+   * 보이지 않는다. 옆으로 벌린 상태에서 접으면 접히는 과정이 화면 안에서
+   * 그대로 보인다.
+   *
+   * 이 자세에서 팔꿈치는 X 가 아니라 **Z** 로 접어야 한다. 어깨를 Z 로 90°
+   * 돌려 놓으면 팔꿈치의 로컬 축도 같이 돌아가서, X 회전은 앞뒤 방향이
+   * 되어 버리기 때문이다.
+   */
+  elbowBend: {
+    id: 'elbowBend',
+    keys: [
+      { t: 0, bones: { leftShoulder: [0, 0, 85], rightShoulder: [0, 0, -85] } },
+      {
+        t: 0.35,
+        bones: {
+          leftShoulder: [0, 0, 85],
+          rightShoulder: [0, 0, -85],
+          leftElbow: [0, 0, 95],
+          rightElbow: [0, 0, -95],
+        },
+      },
+      {
+        t: 0.65,
+        bones: {
+          leftShoulder: [0, 0, 85],
+          rightShoulder: [0, 0, -85],
+          leftElbow: [0, 0, 102],
+          rightElbow: [0, 0, -102],
+        },
+      },
+      { t: 1, bones: { leftShoulder: [0, 0, 85], rightShoulder: [0, 0, -85] } },
+    ],
+  },
+
+  /**
+   * 목 옆으로 기울이기 — 귀를 어깨 쪽으로.
+   *
+   * neckTurn(좌우로 돌리기)과는 다른 방향의 목 스트레칭이다. 머리를 Z 로
+   * 기울이기만 하면 되고, 머리 위 새싹이 같이 기울어져서 멀리서도 어느 쪽으로
+   * 기울었는지 바로 보인다.
+   *
+   * 한때 '나를 안아주기'(양팔로 반대쪽 어깨 잡기)를 넣으려 했으나 이 체형에서는
+   * 불가능했다. 팔 길이 0.62 로는 손이 반대쪽 어깨(0.46 떨어짐)에 닿으려면
+   * 몸통을 통과해야 한다. 머리 위 박수와 같은 한계다.
+   */
+  neckTilt: {
+    id: 'neckTilt',
+    keys: [
+      REST,
+      { t: 0.2, bones: { head: [0, 0, 34] } },
+      { t: 0.35, bones: { head: [0, 0, 34] } },
+      { t: 0.5, bones: {} },
+      { t: 0.7, bones: { head: [0, 0, -34] } },
+      { t: 0.85, bones: { head: [0, 0, -34] } },
+      { t: 1, bones: {} },
+    ],
+  },
+
   /** 목 좌우로 — 아주 천천히. 어깨는 가만히 둔다. */
   neckTurn: {
     id: 'neckTurn',

@@ -27,3 +27,4 @@ public/mediapipe/
 *.njsproj
 *.sln
 *.sw?
+.vercel
