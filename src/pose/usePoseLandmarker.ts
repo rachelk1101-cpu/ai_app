@@ -26,6 +26,16 @@ type Options = {
 const TARGET_FPS = 24
 
 /**
+ * MediaPipe 파일 위치. 절대 경로(`/mediapipe/...`)로 쓰면 안 된다.
+ *
+ * GitHub Pages 는 `https://<계정>.github.io/ai_app/` 처럼 하위 경로로 서빙되므로
+ * 절대 경로는 도메인 루트를 가리켜 404 가 된다. BASE_URL 은 개발에서 `/`,
+ * 빌드에서 `/ai_app/` 로 채워져 두 환경 모두에서 맞는 주소가 된다.
+ */
+const WASM_PATH = `${import.meta.env.BASE_URL}mediapipe/wasm`
+const MODEL_PATH = `${import.meta.env.BASE_URL}mediapipe/pose_landmarker_lite.task`
+
+/**
  * 카메라를 열고 MediaPipe 로 자세를 인식한다.
  *
  * 영상은 기기 밖으로 나가지 않는다. WASM 런타임과 모델 파일을 모두
@@ -99,10 +109,10 @@ export function usePoseLandmarker({ enabled, onFrame }: Options) {
         // 동적 import: MediaPipe 는 번들의 큰 덩어리인데 시작·고르기 화면에서는
         // 쓰지 않는다. 운동을 시작할 때 받도록 미뤄서 첫 화면이 빨리 뜨게 한다.
         const { FilesetResolver, PoseLandmarker } = await import('@mediapipe/tasks-vision')
-        const vision = await FilesetResolver.forVisionTasks('/mediapipe/wasm')
+        const vision = await FilesetResolver.forVisionTasks(WASM_PATH)
         const options = {
           baseOptions: {
-            modelAssetPath: '/mediapipe/pose_landmarker_lite.task',
+            modelAssetPath: MODEL_PATH,
             delegate: 'GPU' as const,
           },
           runningMode: 'VIDEO' as const,

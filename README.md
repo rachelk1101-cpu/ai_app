@@ -28,6 +28,21 @@ npm run preview  # 빌드 결과 확인
 ```
 
 카메라를 쓰므로 `localhost` 또는 **HTTPS** 에서만 인식이 동작한다.
+`--host` 로 띄운 주소(`http://192.168.x.x:5173`)는 HTTPS 가 아니라서
+다른 기기에서는 화면만 보이고 자세 인식은 되지 않는다. 태블릿에서 인식까지
+확인하려면 배포된 주소로 접속할 것.
+
+## 배포
+
+Vercel 에 배포한다. 저장소를 연결해 두면 `main` 에 push 할 때마다 자동으로
+다시 배포된다.
+
+빌드는 `npm run build` 를 그대로 쓴다. `prebuild` 의 `npm run setup` 이
+MediaPipe 파일을 준비하므로 별도 설정이 필요 없다.
+
+하위 경로로 서빙하는 곳(GitHub Pages 의 `/<저장소>/` 같은)에 올릴 때는
+`BASE_PATH=/저장소이름/ npm run build` 로 base 를 덮어쓴다. 코드가
+`import.meta.env.BASE_URL` 을 쓰고 있어 그것만 바꾸면 된다.
 
 ---
 
