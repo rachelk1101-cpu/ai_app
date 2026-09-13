@@ -12,9 +12,13 @@
 
 ```bash
 npm install
-npm run dev             # http://localhost:5173
+npm run dev             # http://localhost:5173/ai_app/
 npm run dev -- --host   # 같은 Wi-Fi 의 태블릿에서 열 때
 ```
+
+주소 끝의 `/ai_app/` 은 오타가 아니다. GitHub Pages 가 하위 경로로 서빙하기
+때문에 개발 서버도 같은 base 를 쓴다 — 개발에서만 통하는 절대 경로를 써 놓고
+배포 후에야 404 로 발견하는 일을 막으려는 것이다.
 
 `npm run dev` / `npm run build` 는 실행 전에 `npm run setup` 을 자동으로 돌려
 MediaPipe 런타임과 모델(합계 42MB)을 `public/mediapipe/` 에 준비한다. 이 파일들은
@@ -34,15 +38,22 @@ npm run preview  # 빌드 결과 확인
 
 ## 배포
 
-Vercel 에 배포한다. 저장소를 연결해 두면 `main` 에 push 할 때마다 자동으로
-다시 배포된다.
+**https://rachelk1101-cpu.github.io/ai_app/**
 
-빌드는 `npm run build` 를 그대로 쓴다. `prebuild` 의 `npm run setup` 이
-MediaPipe 파일을 준비하므로 별도 설정이 필요 없다.
+```bash
+npm run deploy
+```
 
-하위 경로로 서빙하는 곳(GitHub Pages 의 `/<저장소>/` 같은)에 올릴 때는
-`BASE_PATH=/저장소이름/ npm run build` 로 base 를 덮어쓴다. 코드가
-`import.meta.env.BASE_URL` 을 쓰고 있어 그것만 바꾸면 된다.
+빌드해서 `gh-pages` 브랜치에 올린다. 반영까지 1~2분. **자동 배포는 되지 않으니
+코드를 고친 뒤에는 이 명령을 직접 실행해야 한다.**
+
+GitHub Actions 워크플로를 쓰지 않는 이유는, 워크플로 파일을 push 하려면 토큰에
+`workflow` 스코프가 따로 있어야 하는데 그 과정이 번거롭기 때문이다. 결과물만
+브랜치에 올리면 그 권한이 필요 없다.
+
+MediaPipe 파일(42MB)은 git 에 없지만 `prebuild` 가 준비해서 함께 올라간다.
+
+루트로 서빙하는 곳(Vercel 등)에 올릴 때는 `BASE_PATH=/ npm run build`.
 
 ---
 
