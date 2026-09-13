@@ -1,0 +1,29 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# MediaPipe 런타임과 모델 (합계 40MB 이상).
+# npm run setup 이 node_modules 에서 복사하고 공개 주소에서 내려받는다.
+# predev / prebuild 에서 자동으로 돈다.
+public/mediapipe/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
